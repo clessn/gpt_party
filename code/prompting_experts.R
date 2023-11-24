@@ -61,9 +61,9 @@ data_graph <- data_party %>%
 
 ggplot(data_graph, aes(x = Ideology, y = Ideology_gpt)) +
   geom_tile(aes(alpha = n)) +
-  labs(x = "Party alignment (Wikidata)", 
+  labs(x = "Party alignment (Global Party Survey)", 
        y = "Party alignment (GPT-4)", 
-       title = "Party alignment (GPT-4) vs. party alignment (Wikidata)") +
+       title = "Party alignment (GPT-4) vs. party alignment (Global Party Survey)") +
   geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dotted") +
   scale_x_continuous(limits = c(0, 10)) +
   scale_y_continuous(limits = c(0, 10)) +

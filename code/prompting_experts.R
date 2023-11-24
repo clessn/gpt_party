@@ -7,11 +7,12 @@ data_party <- read.csv("_SharedFolder_article_spsa2024_gpt_party/data/expert_sur
 #Partyname
 #Country
 
-data_party$Ideology100 <- NA
+i <- 211
 
+data_party$Ideology_gpt <- NA
+delay_duration <- 2
 
-
-for (i in seq_along(data_party$Country)) {
+for (i in 1:nrow(data_party)) {
   chat_prompt <- create_chat_completion(
     model = "gpt-4",
     messages = list(
@@ -21,16 +22,27 @@ for (i in seq_along(data_party$Country)) {
       ),
       list(
         "role" = "user",
-        "content" = paste0("Categorize the political alignment of the following party using a 10-point scale on which the general political views of the party can be arranged from LEFT to RIGHT where 0 means very left and 10 means very right. Party: ", paste0(data_party$Partyname[i]), ". Country: ", paste0(data_party$country[i]), ". Provide only a number between 0 and 10 as your response.")
+        "content" = paste0("Categorize the political alignment of the following party using a 10-point scale on which the general political views of the party can be arranged from LEFT to RIGHT where 0 means very left and 10 means very right. Party: ", paste0(data_party$Partyname[i]), ". Country: ", paste0(data_party$Country[i]), ". Provide only a number between 0 and 10 as your response. Please answer to the best of your knowledge.")
       
-    )
+    ))
   )
-  print(i)
-  data$gpt_alignment[i] <- chat_prompt$choices$message.content
+
+    # Check if the chat_prompt was successful before proceeding
+  if (!is.null(chat_prompt$choices)) {
+    print(paste("Party: ", data_party$Partyname[i], ". Country: ", data_party$Country[i], ". Ideology: ", data_party$Ideology[i], ". Gpt: ", chat_prompt$choices$message.content))
+    data_party$Ideology_gpt[i] <- chat_prompt$choices$message.content
+  } else {
+    print(paste("Error with API for Party: ", data_party$Partyname[i], ". Country: ", data_party$Country[i]))
+  }
+  
+  # Introduce a delay to avoid hitting rate limits
+  Sys.sleep(delay_duration)
   
 }
 
-hist(data_party$Ideology)
+write.csv(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt.csv")
+
+saveRDS(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt.rds")
 
 
 

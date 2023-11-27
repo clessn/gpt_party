@@ -46,6 +46,8 @@ write.csv(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_surv
 
 saveRDS(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt.rds")
 
+data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt.rds")
+
 data_party$ideo_dist <- abs(as.numeric(data_party$Ideology_gpt) - as.numeric(data_party$Ideology))
 
 data_graph <- data_party %>%
@@ -69,3 +71,8 @@ ggplot(data_graph, aes(x = Ideology, y = Ideology_gpt)) +
   scale_y_continuous(limits = c(0, 10)) +
   geom_smooth(method = "lm", se = FALSE) +
   theme_classic()
+
+cor(data_graph$Ideology, data_graph$Ideology_gpt, method = "kendall")
+
+m1 <- lm(Ideology_gpt ~ Ideology, data = data_graph)
+summary(m1)

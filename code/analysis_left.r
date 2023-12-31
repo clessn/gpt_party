@@ -6,12 +6,14 @@ data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_surv
 data_party$distance <- abs(data_party$Ideology - data_party$Ideology_gpt_mean)
 
 data_party$party_alignment <- NA
-data_party$party_alignment[data_party$Ideology > 4.5 & data_party$Ideology < 5.5 ] <- "center"
+data_party$party_alignment[data_party$Ideology > 4.5 & 
+                           data_party$Ideology < 5.5 ] <- "center"
 data_party$party_alignment[data_party$Ideology >= 5.5] <- "right"
 data_party$party_alignment[data_party$Ideology <= 4.5] <- "left"
 table(data_party$party_alignment)
 
-data_party$party_alignment <- factor(data_party$party_alignment, levels = c("left", "center", "right"))
+data_party$party_alignment <- factor(data_party$party_alignment, 
+                                     levels = c("left", "center", "right"))
 
 
 data_party %>% 

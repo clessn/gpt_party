@@ -2,6 +2,16 @@ library(tidyverse)
 
 data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt.rds")
 
+data_party$distance <- abs(data_party$Ideology - data_party$Ideology_gpt_mean)
+
+data_party$Region_name <- NA 
+data_party$Region_name[data_party$Region == 6] <- "asia_pacific"
+data_party$Region_name[data_party$Region == 5] <- "west"
+data_party$Region_name[data_party$Region == 4] <- "africa"
+data_party$Region_name[data_party$Region == 3] <- "mena"
+data_party$Region_name[data_party$Region == 2] <- "latam"
+data_party$Region_name[data_party$Region == 1] <- "eurasia"
+
 # Graphique nuage de points -------------------------------------- #
 
 data_graph <- data_party %>%
@@ -50,4 +60,22 @@ ggplot(data_party, aes(x = Ideology)) +
        title = "Distribution of party alignment (Global Party Survey)") +
   geom_histogram(aes(x = Ideology_gpt_mean), binwidth = 1, fill = "red", color = "black", alpha = 0.5) +
   theme_classic()
+
+data_distance_countries <- data_party %>%
+  group_by(ISO, Region_name) %>%
+  summarise(mean_distance = mean(distance, na.rm = TRUE), .groups = "drop") %>%
+  arrange(mean_distance)  # Sort in ascending order
+  
+data_distance_countries$ISO <- factor(data_distance_countries$ISO, levels = data_distance_countries$ISO)
+
+ggplot(data_distance_countries, aes(x = ISO, y = mean_distance, fill = Region_name)) +
+    geom_bar(stat = "identity") +
+    labs(x = "Countries ISO Code", 
+         y = "Mean Distance", 
+         title = "Mean distance between party alignment (GPT-4) and party alignment (Global Party Survey)") +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
 

@@ -1,8 +1,9 @@
 library(tidyverse)
 
-data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt.rds")
+data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt_final.rds")
 
-data_party$distance <- abs(data_party$Ideology - data_party$Ideology_gpt_mean)
+data_party$econ_distance <- abs(data_party$V4_Scale - data_party$econ_ideo_gpt_mean)
+data_party$sos_distance <- abs(data_party$V6_Scale - data_party$sos_ideo_gpt_mean)
 
 data_party$Region_name <- NA 
 data_party$Region_name[data_party$Region == 6] <- "asia_pacific"
@@ -15,32 +16,65 @@ table(data_party$Region_name)
 
 anglo_saxon <- c("CAN", "USA", "GBR", "AUS", "NZL", "IRL")
 
+# ------------------ Distance graph ---------------------------- #
 
-data_distance <- data_party %>%
+# Econ
+
+data_distance_econ <- data_party %>%
     filter(Region_name != "NA") %>%
     group_by(Region_name) %>%
-    summarise(mean_distance = mean(distance, na.rm = TRUE), .groups = "drop")
+    summarise(mean_distance = mean(econ_distance, na.rm = TRUE), .groups = "drop")
     
 
-ggplot(data_distance, aes(x = Region_name, y = mean_distance)) +
+ggplot(data_distance_econ, aes(x = Region_name, y = mean_distance)) +
     geom_bar(stat = "identity") +
     labs(x = "Region", 
          y = "Mean distance", 
          title = "Mean distance between party alignment (GPT-4) and party alignment (Global Party Survey)") +
     theme_classic()
 
+# sos
+
+data_distance_sos <- data_party %>%
+    filter(Region_name != "NA") %>%
+    group_by(Region_name) %>%
+    summarise(mean_distance = mean(sos_distance, na.rm = TRUE), .groups = "drop")
+    
+
+ggplot(data_distance_sos, aes(x = Region_name, y = mean_distance)) +
+    geom_bar(stat = "identity") +
+    labs(x = "Region", 
+         y = "Mean distance", 
+         title = "Mean distance between party alignment (GPT-4) and party alignment (Global Party Survey)") +
+    theme_classic()
+
+# ------------------ Distance graph anglo saxon ---------------------------- #
 
 data_party$group <- "rest"
 data_party$group[data_party$ISO %in% anglo_saxon] <- "anglo_saxon"
 
-# Group by the new 'group' column and summarise
-data_distance_anglo <- data_party %>%
+# Econ 
+
+data_distance_anglo_econ <- data_party %>%
     filter(Region_name != "NA") %>%
     group_by(group) %>%
-    summarise(mean_distance = mean(distance, na.rm = TRUE), .groups = "drop")
+    summarise(mean_distance = mean(econ_distance, na.rm = TRUE), .groups = "drop")
     
+ggplot(data_distance_anglo_econ, aes(x = group, y = mean_distance)) +
+    geom_bar(stat = "identity") +
+    labs(x = "Region", 
+         y = "Mean distance", 
+         title = "Mean distance between party alignment (GPT-4) and party alignment (Global Party Survey)") +
+    theme_classic()
 
-ggplot(data_distance_anglo, aes(x = group, y = mean_distance)) +
+# sos
+
+data_distance_anglo_sos <- data_party %>%
+    filter(Region_name != "NA") %>%
+    group_by(group) %>%
+    summarise(mean_distance = mean(sos_distance, na.rm = TRUE), .groups = "drop")
+    
+ggplot(data_distance_anglo_sos, aes(x = group, y = mean_distance)) +
     geom_bar(stat = "identity") +
     labs(x = "Region", 
          y = "Mean distance", 

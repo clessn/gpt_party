@@ -137,9 +137,9 @@ data_party$sos_ideo_gpt_1 <- ifelse(nchar(data_party$sos_ideo_gpt_run1) > 10, NA
 data_party$sos_ideo_gpt_2 <- ifelse(nchar(data_party$sos_ideo_gpt_run2) > 10, NA, data_party$sos_ideo_gpt_run2)
 data_party$sos_ideo_gpt_3 <- ifelse(nchar(data_party$sos_ideo_gpt_run3) > 10, NA, data_party$sos_ideo_gpt_run3)
 
-data_party$sos_ideo_gpt_run1 <- as.numeric(data_party$sos_ideo_gpt_run1)
-data_party$sos_ideo_gpt_run2 <- as.numeric(data_party$sos_ideo_gpt_run2)
-data_party$sos_ideo_gpt_run3 <- as.numeric(data_party$sos_ideo_gpt_run3)
+data_party$sos_ideo_gpt_1 <- as.numeric(data_party$sos_ideo_gpt_1)
+data_party$sos_ideo_gpt_2 <- as.numeric(data_party$sos_ideo_gpt_2)
+data_party$sos_ideo_gpt_3 <- as.numeric(data_party$sos_ideo_gpt_3)
 
 data_party$sos_ideo_gpt_mean <- rowMeans(data_party[, c("sos_ideo_gpt_1", "sos_ideo_gpt_2", "sos_ideo_gpt_3")], na.rm = TRUE)
 

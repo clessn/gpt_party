@@ -1,4 +1,5 @@
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 
 data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt_final.rds")
 
@@ -153,3 +154,35 @@ ggplot(data_distance_countries_sos, aes(x = ISO, y = mean_distance, fill = Regio
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
+# ---------------------- T Test ------------------------------------------------
+
+# Econ
+
+t.test(data_party$V4_Scale, data_party$econ_ideo_gpt_mean, paired = TRUE)
+
+# Sos
+
+t.test(data_party$V6_Scale, data_party$sos_ideo_gpt_mean, paired = TRUE)
+
+# ---------------------- Correlation ------------------------------------------
+
+# Econ
+
+cor.test(data_party$V4_Scale, data_party$econ_ideo_gpt_mean, method = "pearson")
+
+# Sos
+
+cor.test(data_party$V6_Scale, data_party$sos_ideo_gpt_mean, method = "pearson")
+
+# ---------------------- plot --------------------------------------------------
+
+ggplot(data_party, aes(x = V4_Scale, y = econ_ideo_gpt_mean)) +
+  geom_point(aes(size = 2, alpha = 0.5)) +
+  labs(x = "Party alignment (Global Party Survey)", 
+       y = "Party alignment (GPT-4)", 
+       title = "Party alignment (GPT-4) vs. party alignment (Global Party Survey)") +
+  geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dotted") +
+  scale_x_continuous(limits = c(0, 10)) +
+  scale_y_continuous(limits = c(0, 10)) +
+  theme_classic() +
+  facet_wrap(~ Region_name, nrow = 2)

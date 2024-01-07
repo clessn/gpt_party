@@ -5,6 +5,7 @@ data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_surv
 
 data_party$econ_distance <- abs(data_party$V4_Scale - data_party$econ_ideo_gpt_mean)
 data_party$sos_distance <- abs(data_party$V6_Scale - data_party$sos_ideo_gpt_mean)
+data_party$mean_distance <- (data_party$econ_distance + data_party$sos_distance) / 2
 
 data_party$Region_name <- NA 
 data_party$Region_name[data_party$Region == 6] <- "asia_pacific"
@@ -146,6 +147,23 @@ data_distance_countries_sos <- data_party %>%
 data_distance_countries_sos$ISO <- factor(data_distance_countries_sos$ISO, levels = data_distance_countries_sos$ISO)
 
 ggplot(data_distance_countries_sos, aes(x = ISO, y = mean_distance, fill = Region_name)) +
+    geom_bar(stat = "identity") +
+    labs(x = "Countries ISO Code", 
+         y = "Mean Distance", 
+         title = "Mean distance between party alignment (GPT-4) and party alignment (Global Party Survey)") +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# ---------------------- Mean distance -----------------------------------------
+
+data_distance_countries <- data_party %>%
+  group_by(ISO, Region_name) %>%
+  summarise(mean_distance = mean(mean_distance, na.rm = TRUE), .groups = "drop") %>%
+  arrange(mean_distance)  # Sort in ascending order
+
+data_distance_countries$ISO <- factor(data_distance_countries$ISO, levels = data_distance_countries$ISO)
+
+ggplot(data_distance_countries, aes(x = ISO, y = mean_distance, fill = Region_name)) +
     geom_bar(stat = "identity") +
     labs(x = "Countries ISO Code", 
          y = "Mean Distance", 

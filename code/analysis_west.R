@@ -1,66 +1,36 @@
-library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
 
 data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")
 
 # ------------------ Distance graph ---------------------------- #
 
-# Econ
 
-data_distance_econ <- data_party %>%
-    filter(Region_name != "NA") %>%
-    group_by(Region_name) %>%
-    summarise(mean_distance = mean(econ_distance, na.rm = TRUE), .groups = "drop")
-    
+long_data <- data_party %>%
+  filter(Region_name != "NA") %>%
+  select(Region_name, econ_distance, sos_distance) %>%
+  pivot_longer(
+    cols = c(econ_distance, sos_distance),
+    names_to = "distance_type",
+    values_to = "distance"
+  ) %>%
+  mutate(distance_type = if_else(distance_type == "econ_distance", "Econ", "Sos"))
 
-ggplot(data_distance_econ, aes(x = Region_name, y = mean_distance)) +
-    geom_bar(stat = "identity") +
-    labs(x = "Region", 
-         y = "Mean distance", 
-         title = "Mean distance between party alignment (GPT-4) and party alignment (Global Party Survey)") +
-    theme_classic()
+# Calculate mean distance for each region and distance type
+long_data <- long_data %>%
+  group_by(Region_name, distance_type) %>%
+  summarise(mean_distance = mean(distance, na.rm = TRUE), .groups = "drop")
 
-# sos
-
-data_distance_sos <- data_party %>%
-    filter(Region_name != "NA") %>%
-    group_by(Region_name) %>%
-    summarise(mean_distance = mean(sos_distance, na.rm = TRUE), .groups = "drop")
-    
-
-ggplot(data_distance_sos, aes(x = Region_name, y = mean_distance)) +
-    geom_bar(stat = "identity") +
-    labs(x = "Region", 
-         y = "Mean distance", 
-         title = "Mean distance between party alignment (GPT-4) and party alignment (Global Party Survey)") +
-    theme_classic()
+# Plot with sorted x-axis
+ggplot(long_data, aes(x = reorder(Region_name, -mean_distance), y = mean_distance, fill = distance_type)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
+  labs(x = "Region", 
+       y = "Mean Distance", 
+       title = "Mean Distance by Region (Econ and Sos) - Sorted") +
+  theme_classic() +
+  scale_fill_brewer(palette = "Set1") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Adjust x-axis labels for readability
 
 
-# ------------------ Distance graph anglo saxon ---------------------------- 
 
-# Econ 
-
-data_distance_anglo_econ <- data_party %>%
-    filter(Region_name != "NA") %>%
-    group_by(group) %>%
-    summarise(mean_distance = mean(econ_distance, na.rm = TRUE), .groups = "drop")
-    
-ggplot(data_distance_anglo_econ, aes(x = group, y = mean_distance)) +
-    geom_bar(stat = "identity") +
-    labs(x = "Region", 
-         y = "Mean distance", 
-         title = "Mean distance between party alignment (GPT-4) and party alignment (Global Party Survey)") +
-    theme_classic()
-
-# sos
-
-data_distance_anglo_sos <- data_party %>%
-    filter(Region_name != "NA") %>%
-    group_by(group) %>%
-    summarise(mean_distance = mean(sos_distance, na.rm = TRUE), .groups = "drop")
-    
-ggplot(data_distance_anglo_sos, aes(x = group, y = mean_distance)) +
-    geom_bar(stat = "identity") +
-    labs(x = "Region", 
-         y = "Mean distance", 
-         title = "Mean distance between party alignment (GPT-4) and party alignment (Global Party Survey)") +
-    theme_classic()

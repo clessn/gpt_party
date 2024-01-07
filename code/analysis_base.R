@@ -137,38 +137,6 @@ ggplot(data_distance_countries_sos, aes(x = ISO, y = mean_distance, fill = Regio
     theme_classic() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# ---------------------- T Test ------------------------------------------------
-
-# Econ
-
-t.test(data_party$V4_Scale, data_party$econ_ideo_gpt_mean, paired = TRUE)
-
-# Sos
-
-t.test(data_party$V6_Scale, data_party$sos_ideo_gpt_mean, paired = TRUE)
-
-# ---------------------- Correlation ------------------------------------------
-
-# Econ
-
-cor.test(data_party$V4_Scale, data_party$econ_ideo_gpt_mean, method = "pearson")
-
-# Sos
-
-cor.test(data_party$V6_Scale, data_party$sos_ideo_gpt_mean, method = "pearson")
-
-# ---------------------- Regression -------------------------------------------
-
-# econ
-
-m1 <- lm(econ_ideo_gpt_mean ~ V4_Scale, data = data_party)
-summary(m1)
-
-# sos
-
-m2 <- lm(sos_ideo_gpt_mean ~ V6_Scale, data = data_party)
-summary(m2)
-
 # ---------------------- plot --------------------------------------------------
 
 ggplot(data_party, aes(x = V4_Scale, y = econ_ideo_gpt_mean)) +

@@ -1,19 +1,7 @@
 library(dplyr)
 library(ggplot2)
 
-data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt_final.rds")
-
-data_party$econ_distance <- abs(data_party$V4_Scale - data_party$econ_ideo_gpt_mean)
-data_party$sos_distance <- abs(data_party$V6_Scale - data_party$sos_ideo_gpt_mean)
-data_party$mean_distance <- (data_party$econ_distance + data_party$sos_distance) / 2
-
-data_party$Region_name <- NA 
-data_party$Region_name[data_party$Region == 6] <- "asia_pacific"
-data_party$Region_name[data_party$Region == 5] <- "west"
-data_party$Region_name[data_party$Region == 4] <- "africa"
-data_party$Region_name[data_party$Region == 3] <- "mena"
-data_party$Region_name[data_party$Region == 2] <- "latam"
-data_party$Region_name[data_party$Region == 1] <- "eurasia"
+data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")
 
 # Graphique nuage de points -------------------------------------- #
 
@@ -72,9 +60,6 @@ ggplot(data_graph_rounded, aes(x = V4_Scale, y = econ_ideo_gpt_mean)) +
   geom_smooth(method = "lm", se = FALSE) +
   theme_classic()
 
-m1 <- lm(econ_ideo_gpt_mean ~ V4_Scale, data = data_party)
-summary(m1)
-
 # Rounded sos
 
 data_graph_rounded_sos <- data_party %>%
@@ -94,8 +79,6 @@ ggplot(data_graph_rounded_sos, aes(x = V6_Scale, y = sos_ideo_gpt_mean)) +
   geom_smooth(method = "lm", se = FALSE) +
   theme_classic()
 
-m1 <- lm(sos_ideo_gpt_mean ~ V6_Scale, data = data_party)
-summary(m1)
 
 # ----------------- Comparaison des distributions ----------------- #
 # Econ
@@ -154,24 +137,6 @@ ggplot(data_distance_countries_sos, aes(x = ISO, y = mean_distance, fill = Regio
     theme_classic() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# ---------------------- Mean distance -----------------------------------------
-
-data_distance_countries <- data_party %>%
-  group_by(ISO, Region_name) %>%
-  summarise(mean_distance = mean(mean_distance, na.rm = TRUE), .groups = "drop") %>%
-  arrange(mean_distance)  # Sort in ascending order
-
-data_distance_countries$ISO <- factor(data_distance_countries$ISO, levels = data_distance_countries$ISO)
-
-ggplot(data_distance_countries, aes(x = ISO, y = mean_distance, fill = Region_name)) +
-    geom_bar(stat = "identity") +
-    labs(x = "Countries ISO Code", 
-         y = "Mean Distance", 
-         title = "Mean distance between party alignment (GPT-4) and party alignment (Global Party Survey)") +
-    theme_classic() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-
 # ---------------------- T Test ------------------------------------------------
 
 # Econ
@@ -191,6 +156,18 @@ cor.test(data_party$V4_Scale, data_party$econ_ideo_gpt_mean, method = "pearson")
 # Sos
 
 cor.test(data_party$V6_Scale, data_party$sos_ideo_gpt_mean, method = "pearson")
+
+# ---------------------- Regression -------------------------------------------
+
+# econ
+
+m1 <- lm(econ_ideo_gpt_mean ~ V4_Scale, data = data_party)
+summary(m1)
+
+# sos
+
+m2 <- lm(sos_ideo_gpt_mean ~ V6_Scale, data = data_party)
+summary(m2)
 
 # ---------------------- plot --------------------------------------------------
 

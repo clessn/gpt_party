@@ -44,7 +44,7 @@ ggplot(long_data2, aes(x = reorder(Region_name, -mean_distance),
            position = position_dodge(width = 0.9)) +
   geom_linerange(aes(ymin = l_ci, ymax = u_ci),
                  linewidth = 1,
-                position = position_dodge(width = 0.9), width = 0.8) +
+                position = position_dodge(width = 0.9)) +
   labs(x = "", 
        y = "\nMean Absolute Distance\n", 
        title = "Mean Distance Between Party Alignement from\nGPT-4 and GPS by Region") +

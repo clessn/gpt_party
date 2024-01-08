@@ -42,3 +42,6 @@ ggplot(long_data, aes(x = alignment, y = mean_distance, fill = alignment_type)) 
        title = "Mean Distance in Party Alignments (Econ and Sos) with Error Margins") +
   theme_classic() +
   scale_fill_brewer(palette = "Set1")
+
+
+

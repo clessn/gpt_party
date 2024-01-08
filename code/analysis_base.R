@@ -34,8 +34,8 @@ ggplot(h1, aes(x = gps, y = gpt)) +
   clessnverse::theme_clean_light() +
   scale_x_continuous(breaks = c(1, 9), labels = c("Left", "Right")) +
   scale_y_continuous(breaks = c(1, 9), labels = c("Left", "Right")) +
-  labs(x = "\nParty Alignement (GPS)\n",
-       y = "\nParty Alignement (GPT-4)\n") +
+  labs(x = "\nParty Alignment (GPS)\n",
+       y = "\nParty Alignment (GPT-4)\n") +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         axis.text.y = element_text(angle = 90))

@@ -57,6 +57,3 @@ ggplot(long_data2, aes(x = reorder(Region_name, -mean_distance),
 
 ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h2_barplot.png",
        width = 8, height = 6)
-
-
-

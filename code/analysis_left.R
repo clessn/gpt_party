@@ -43,5 +43,5 @@ ggplot(long_data, aes(x = alignment, y = mean_distance, fill = alignment_type)) 
   theme_classic() +
   scale_fill_brewer(palette = "Set1")
 
-
+# 
 

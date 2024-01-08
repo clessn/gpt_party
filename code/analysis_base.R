@@ -149,3 +149,10 @@ ggplot(data_party, aes(x = V4_Scale, y = econ_ideo_gpt_mean)) +
   scale_y_continuous(limits = c(0, 10)) +
   theme_classic() +
   facet_wrap(~ Region_name, nrow = 2)
+
+
+# For paper ---------------------------------------------------------------
+
+## T-test -------------------------------------------------------------------
+
+ttest_ecn <- t.test(data_party$V6)

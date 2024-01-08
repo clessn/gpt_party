@@ -1,5 +1,6 @@
 library(dplyr)
 library(ggplot2)
+library(patchwork)
 
 data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")
 
@@ -69,36 +70,3 @@ ggplot(results, aes(x = MeanDifference, y = Category)) +
 ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h1_ttest.png",
        width = 8, height = 6)
 
-results <- data.frame(
-  Category = c("Econ", "Sos"),
-  MeanDifference = c(econ_test$estimate, sos_test$estimate),
-  LowerCI = c(econ_test$conf.int[1], sos_test$conf.int[1]),
-  UpperCI = c(econ_test$conf.int[2], sos_test$conf.int[2]),
-  Tvalue = c(econ_test$statistic, sos_test$statistic),
-  Pvalue = c(econ_test$p.value, sos_test$p.value)
-)
-
-# Create the ggplot
-ggplot(results, aes(x = Category, y = MeanDifference)) +
-  geom_point() +
-  geom_errorbar(aes(ymin = LowerCI, ymax = UpperCI), width = 0.2) +
-  geom_text(aes(label = sprintf("t = %.2f\np = %.2e", Tvalue, Pvalue)), 
-            vjust = -1.5, size = 3) +
-  theme_minimal() +
-  labs(title = "Mean Differences from Paired T-Tests",
-       x = "Category",
-       y = "Mean Difference") +
-  theme(plot.title = element_text(hjust = 0.5))
-
-
-ggplot(results, aes(y = Category, x = MeanDifference)) +
-  geom_point() +
-  geom_errorbarh(aes(xmin = LowerCI, xmax = UpperCI), height = 0.2) +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "red") +  # Vertical line at zero
-  geom_text(aes(label = sprintf("t = %.2f\np = %.2e", Tvalue, Pvalue)), 
-            hjust = -0.1, size = 3) +
-  theme_minimal() +
-  labs(title = "Mean Differences from Paired T-Tests",
-       y = "Category",
-       x = "Mean Difference") +
-  theme(plot.title = element_text(hjust = 0.5))

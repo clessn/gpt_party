@@ -41,13 +41,17 @@ ggplot(long_data2, aes(x = partysize, y = mean_distance, fill = distance_type)) 
                      color = distance_type), linewidth = 1,
                  position = position_dodge(width = 0.9)) +
   labs(x = "\nParty Size (GPS categorization)\n", 
-       y = "\nMean Distance\n", 
-       title = "Mean Distance Between Party Alignement from\nGPT-4 and GPS by Party Size") +
+       y = "\nMean Distance\n") +
   clessnverse::theme_clean_light() +
   scale_fill_brewer(palette = "Set1") +
   scale_color_brewer(palette = "Set1") +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5))
+  theme(axis.title.x = element_text(hjust = 0.5, size = 20), # Bolder and larger axis title X
+        axis.title.y = element_text(hjust = 0.5, size = 20), # Bolder and larger axis title Y
+        axis.text.x = element_text(size = 20), # Bolder and larger axis text X
+        axis.text.y = element_text(size = 20),
+        plot.caption = element_text(size = 20), # Increased size
+        legend.text = element_text(size = 20), # Increase legend text size
+        legend.key.size = unit(1.5, "lines")) # Bolder and larger plot caption
 
 ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h4_barplot.png",
        width = 8, height = 6)

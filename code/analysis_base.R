@@ -176,3 +176,40 @@ ggplot(data_party, aes(x = V4_Scale, y = econ_ideo_gpt_mean)) +
 ## T-test -------------------------------------------------------------------
 
 ttest_ecn <- t.test(data_party$V6)
+
+h1 <- data_party %>% 
+  select(ID_GPS,
+         scale_econ = V4_Scale,
+         scale_social = V6_Scale,
+         gpt_econ = econ_ideo_gpt_mean,
+         gpt_social = sos_ideo_gpt_mean) %>% 
+  pivot_longer(., cols = starts_with("scale"),
+               names_to = "scale",
+               names_prefix = "scale_",
+               values_to = "gps") %>% 
+  pivot_longer(., cols = starts_with("gpt"),
+               names_to = "gptscale",
+               names_prefix = "gpt_",
+               values_to = "gpt") %>% 
+  filter(scale == gptscale) %>% 
+  mutate(scale = ifelse(scale == "econ", "Economic", "Social"))
+
+ggplot(h1, aes(x = gps, y = gpt)) +
+  facet_wrap(~scale) +
+  geom_jitter(alpha = 0.6, shape = 19,
+              width = 0.2, height = 0.2) +
+  geom_smooth(method = "lm",
+              color = "black",
+              alpha = 0.2) +
+  clessnverse::theme_clean_light() +
+  scale_x_continuous(breaks = c(1, 9), labels = c("Left", "Right")) +
+  scale_y_continuous(breaks = c(1, 9), labels = c("Left", "Right")) +
+  labs(x = "\nParty Alignment (GPS)\n",
+       y = "\nParty Alignment (GPT-4)\n") +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        axis.text.y = element_text(angle = 90))
+
+ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h1_scatterplot.png",
+       width = 8, height = 6)
+

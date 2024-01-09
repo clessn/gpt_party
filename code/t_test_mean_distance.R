@@ -57,16 +57,53 @@ ggplot(results, aes(x = MeanDifference, y = Category)) +
   geom_linerange(aes(xmin = LowerCI99, xmax = UpperCI99), linewidth = 0.7) +
   geom_linerange(aes(xmin = LowerCI95, xmax = UpperCI95), linewidth = 2) +
   clessnverse::theme_clean_light() +
-  labs(title = "Mean Differences from Paired T-Tests",
-       x = "\nMean Difference\n",
+  labs(x = "\nMean Difference\n",
        y = "\nIdeological Scale\n",
-       caption = "Thicker lines denote a 95% confidence interval while thinner lines indicate a 99% confidence interval.") +
+       caption = "Thicker lines denote a 95% confidence interval.\nThinner lines indicate a 99% confidence interval.") +
   scale_x_continuous(limits = c(-0.75, 0)) +
   scale_y_discrete(labels = c("Sos" = "Social", "Econ" = "Economic")) +
   geom_vline(xintercept = 0, linetype = "dotted") +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5))
+  theme(plot.caption.position = "plot",
+        axis.title.x = element_text(hjust = 0.5, size = 20),
+        axis.title.y = element_text(hjust = 0.5, size = 20),
+        axis.text.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20),
+        plot.caption = element_text(size = 20, hjust = 0))
 
 ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h1_ttest.png",
        width = 8, height = 6)
 
+h1 <- data_party %>% 
+  select(ID_GPS,
+         scale_econ = V4_Scale,
+         scale_social = V6_Scale,
+         gpt_econ = econ_ideo_gpt_mean,
+         gpt_social = sos_ideo_gpt_mean) %>% 
+  pivot_longer(., cols = starts_with("scale"),
+               names_to = "scale",
+               names_prefix = "scale_",
+               values_to = "gps") %>% 
+  pivot_longer(., cols = starts_with("gpt"),
+               names_to = "gptscale",
+               names_prefix = "gpt_",
+               values_to = "gpt") %>% 
+  filter(scale == gptscale) %>% 
+  mutate(scale = ifelse(scale == "econ", "Economic", "Social"))
+
+g2 <- ggplot(h1, aes(x = gps, y = gpt)) +
+  facet_wrap(~scale) +
+  geom_jitter(alpha = 0.6, shape = 19,
+              width = 0.2, height = 0.2) +
+  geom_smooth(method = "lm",
+              color = "black",
+              alpha = 0.2) +
+  clessnverse::theme_clean_light() +
+  scale_x_continuous(breaks = c(1, 9), labels = c("Left", "Right")) +
+  scale_y_continuous(breaks = c(1, 9), labels = c("Left", "Right")) +
+  labs(x = "\nParty Alignment (GPS)\n",
+       y = "\nParty Alignment (GPT-4)\n") +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        axis.text.y = element_text(angle = 90))
+
+g2 + g1

@@ -41,6 +41,42 @@ anglo_saxon <- c("CAN", "USA", "GBR", "AUS", "NZL", "IRL")
 data_party$group <- "rest"
 data_party$group[data_party$ISO %in% anglo_saxon] <- "anglo_saxon"
 
+data_party$econ_ideo_cat <- NA
+data_party$econ_ideo_cat[data_party$V4_Scale < 2] <- 1
+data_party$econ_ideo_cat[data_party$V4_Scale >= 2 & data_party$V4_Scale < 4] <- 2
+data_party$econ_ideo_cat[data_party$V4_Scale >= 4 & data_party$V4_Scale < 5] <- 3
+data_party$econ_ideo_cat[data_party$V4_Scale == 5] <- 4
+data_party$econ_ideo_cat[data_party$V4_Scale > 5 & data_party$V4_Scale <= 6] <- 5
+data_party$econ_ideo_cat[data_party$V4_Scale > 6 & data_party$V4_Scale <= 8] <- 6
+data_party$econ_ideo_cat[data_party$V4_Scale > 8] <- 7
+
+data_party$econ_ideo_cat_gpt <- NA
+data_party$econ_ideo_cat_gpt[data_party$econ_ideo_gpt_mean < 2] <- 1
+data_party$econ_ideo_cat_gpt[data_party$econ_ideo_gpt_mean >= 2 & data_party$econ_ideo_gpt_mean < 4] <- 2
+data_party$econ_ideo_cat_gpt[data_party$econ_ideo_gpt_mean >= 4 & data_party$econ_ideo_gpt_mean < 5] <- 3
+data_party$econ_ideo_cat_gpt[data_party$econ_ideo_gpt_mean == 5] <- 4
+data_party$econ_ideo_cat_gpt[data_party$econ_ideo_gpt_mean > 5 & data_party$econ_ideo_gpt_mean <= 6] <- 5
+data_party$econ_ideo_cat_gpt[data_party$econ_ideo_gpt_mean > 6 & data_party$econ_ideo_gpt_mean <= 8] <- 6
+data_party$econ_ideo_cat_gpt[data_party$econ_ideo_gpt_mean > 8] <- 7
+
+data_party$sos_ideo_cat <- NA
+data_party$sos_ideo_cat[data_party$V6_Scale < 2] <- 1
+data_party$sos_ideo_cat[data_party$V6_Scale >= 2 & data_party$V6_Scale < 4] <- 2
+data_party$sos_ideo_cat[data_party$V6_Scale >= 4 & data_party$V6_Scale < 5] <- 3
+data_party$sos_ideo_cat[data_party$V6_Scale == 5] <- 4
+data_party$sos_ideo_cat[data_party$V6_Scale > 5 & data_party$V6_Scale <= 6] <- 5
+data_party$sos_ideo_cat[data_party$V6_Scale > 6 & data_party$V6_Scale <= 8] <- 6
+data_party$sos_ideo_cat[data_party$V6_Scale > 8] <- 7
+
+data_party$sos_ideo_cat_gpt <- NA
+data_party$sos_ideo_cat_gpt[data_party$sos_ideo_gpt_mean < 2] <- 1
+data_party$sos_ideo_cat_gpt[data_party$sos_ideo_gpt_mean >= 2 & data_party$sos_ideo_gpt_mean < 4] <- 2
+data_party$sos_ideo_cat_gpt[data_party$sos_ideo_gpt_mean >= 4 & data_party$sos_ideo_gpt_mean < 5] <- 3
+data_party$sos_ideo_cat_gpt[data_party$sos_ideo_gpt_mean == 5] <- 4
+data_party$sos_ideo_cat_gpt[data_party$sos_ideo_gpt_mean > 5 & data_party$sos_ideo_gpt_mean <= 6] <- 5
+data_party$sos_ideo_cat_gpt[data_party$sos_ideo_gpt_mean > 6 & data_party$sos_ideo_gpt_mean <= 8] <- 6
+data_party$sos_ideo_cat_gpt[data_party$sos_ideo_gpt_mean > 8] <- 7
+
 write.csv(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.csv")
 
 saveRDS(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")

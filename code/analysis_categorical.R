@@ -4,14 +4,13 @@ library(ggplot2)
 
 data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")
 
-## h3 for paper
 
 h3 <- data_party %>% 
   select(ID_GPS,
-         scale_econ = V4_Scale,
-         scale_social = V6_Scale,
-         gpt_econ = econ_ideo_gpt_mean,
-         gpt_social = sos_ideo_gpt_mean) %>% 
+         scale_econ = econ_ideo_cat,
+         scale_social = sos_ideo_cat,
+         gpt_econ = econ_ideo_cat_gpt,
+         gpt_social = sos_ideo_cat_gpt) %>% 
   pivot_longer(., cols = starts_with("scale"),
                names_to = "scale",
                names_prefix = "scale_",
@@ -106,26 +105,6 @@ long_data2 <- long_data %>%
   ),
   alignment = factor(alignment, levels = c("Left", "Center", "Right")),
   alignment_type = ifelse(alignment_type == "Econ", "Economic", "Social"))
-
-# Plot with error bars
-ggplot(long_data2, aes(x = alignment, y = mean_distance, fill = alignment_type)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9),
-           alpha = 0.7) +
-  geom_linerange(aes(ymin = lower_ci,
-                     ymax = upper_ci,
-                     color = alignment_type), linewidth = 1,
-                position = position_dodge(width = 0.9)) +
-  labs(x = "\nParty Alignment (GPS)\n", 
-       y = "\nMean Absolute Distance\n", 
-       caption = "Parties labeled as 'Left' have a GPS party alignment of less than 5, those labeled as 'Right' have a \nparty alignment greater than 5 and 'Center' parties are assigned the value of 5.") +
-  scale_fill_brewer(palette = "Set1") +
-  scale_color_brewer(palette = "Set1") +
-  clessnverse::theme_clean_light() +
-  theme(axis.title.x = element_text(hjust = 0.5, size = 20), # Bolder and larger axis title X
-        axis.title.y = element_text(hjust = 0.5, size = 20), # Bolder and larger axis title Y
-        axis.text.x = element_text(size = 15), # Bolder and larger axis text X
-        axis.text.y = element_text(size = 15),
-        plot.caption = element_text(size = 20, hjust = 0)) # Bolder and larger plot caption
 
 ggplot(long_data2, aes(x = alignment, y = mean_distance, fill = alignment_type)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9),

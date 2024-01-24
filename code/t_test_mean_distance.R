@@ -41,6 +41,9 @@ summary(m2)
 econ_test <- t.test(data_party$V4_Scale, data_party$econ_ideo_gpt_mean, paired = TRUE)
 sos_test <- t.test(data_party$V6_Scale, data_party$sos_ideo_gpt_mean, paired = TRUE)
 
+econ_t_value <- econ_test$statistic
+sos_t_value <- sos_test$statistic
+
 # Extract Mean Differences and Confidence Intervals
 results <- data.frame(
   Category = c("Econ", "Sos"),
@@ -63,6 +66,10 @@ ggplot(results, aes(x = MeanDifference, y = Category)) +
   scale_x_continuous(limits = c(-0.75, 0)) +
   scale_y_discrete(labels = c("Sos" = "Social", "Econ" = "Economic")) +
   geom_vline(xintercept = 0, linetype = "dotted") +
+  geom_text(aes(x = -0.34, y = "Econ", label = paste("t = ", round(econ_t_value, 2), sep = "")),
+            hjust = 0, size = 5) +
+  geom_text(aes(x = -0.1, y = "Sos", label = paste("t = ", round(sos_t_value, 2), sep = "")),
+            hjust = 0, size = 5) +
   theme(plot.caption.position = "plot",
         axis.title.x = element_text(hjust = 0.5, size = 20),
         axis.title.y = element_text(hjust = 0.5, size = 20),

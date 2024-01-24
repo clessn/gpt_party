@@ -150,6 +150,8 @@ saveRDS(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey
 data_party$econ_distance <- abs(data_party$V4_Scale - data_party$econ_ideo_gpt_mean)
 data_party$sos_distance <- abs(data_party$V6_Scale - data_party$sos_ideo_gpt_mean)
 
+mean(data_party$V4_Scale - data_party$econ_ideo_gpt_mean, na.rm = T)
+
 data_party$Region_name <- NA 
 data_party$Region_name[data_party$Region == 6] <- "asia_pacific"
 data_party$Region_name[data_party$Region == 5] <- "west"

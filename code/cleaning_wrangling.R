@@ -7,6 +7,9 @@ data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_surv
 data_party$econ_distance <- abs(data_party$V4_Scale - data_party$econ_ideo_gpt_mean)
 data_party$sos_distance <- abs(data_party$V6_Scale - data_party$sos_ideo_gpt_mean)
 
+data_party$cat_econ_distance <- abs(data_party$econ_ideo_cat - data_party$econ_ideo_cat_gpt)
+data_party$cat_sos_distance <- abs(data_party$sos_ideo_cat - data_party$sos_ideo_cat_gpt)
+
 mean(data_party$V4_Scale - data_party$econ_ideo_gpt_mean, na.rm = T)
 
 data_party$Region_name <- NA 

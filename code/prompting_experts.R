@@ -3,7 +3,7 @@ library(openai)
 library(stringr)
 
 
-data_party <- read.csv("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/dataverse_files/Global Party Survey by Party SPSS V2_1_Apr_2020-2.csv")
+data_party <- read.csv("data/expert_survey/dataverse_files/Global Party Survey by Party SPSS V2_1_Apr_2020-2.csv")
 
 #Ideology 
 #Partyname
@@ -60,9 +60,9 @@ for (run in 1:3) {
     }
 }
 
-write.csv(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt_uncleaned.csv")
+write.csv(data_party, "data/expert_survey/gps_gpt_uncleaned.csv")
 
-saveRDS(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt_uncleaned.rds")
+saveRDS(data_party, "data/expert_survey/gps_gpt_uncleaned.rds")
 
 data_party$econ_ideo_gpt_1 <- ifelse(nchar(data_party$econ_ideo_gpt_run1) > 10, NA, data_party$econ_ideo_gpt_run1)
 data_party$econ_ideo_gpt_2 <- ifelse(nchar(data_party$econ_ideo_gpt_run2) > 10, NA, data_party$econ_ideo_gpt_run2)
@@ -74,9 +74,9 @@ data_party$econ_ideo_gpt_3 <- as.numeric(data_party$econ_ideo_gpt_3)
 
 data_party$econ_ideo_gpt_mean <- rowMeans(data_party[, c("econ_ideo_gpt_1", "econ_ideo_gpt_2", "econ_ideo_gpt_3")], na.rm = TRUE)
 
-write.csv(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt.csv")
+write.csv(data_party, "data/expert_survey/gps_gpt.csv")
 
-saveRDS(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt.rds")
+saveRDS(data_party, "data/expert_survey/gps_gpt.rds")
 
 # ------------------- PROMPTING V6 LIBERALISM VS CONSERVATISM ------------------
 
@@ -129,9 +129,9 @@ for (run in 1:3) {
     }
 }
 
-write.csv(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt_uncleaned_sos.csv")
+write.csv(data_party, "data/expert_survey/gps_gpt_uncleaned_sos.csv")
 
-saveRDS(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt_uncleaned_sos.rds")
+saveRDS(data_party, "data/expert_survey/gps_gpt_uncleaned_sos.rds")
 
 data_party$sos_ideo_gpt_1 <- ifelse(nchar(data_party$sos_ideo_gpt_run1) > 10, NA, data_party$sos_ideo_gpt_run1)
 data_party$sos_ideo_gpt_2 <- ifelse(nchar(data_party$sos_ideo_gpt_run2) > 10, NA, data_party$sos_ideo_gpt_run2)
@@ -143,8 +143,8 @@ data_party$sos_ideo_gpt_3 <- as.numeric(data_party$sos_ideo_gpt_3)
 
 data_party$sos_ideo_gpt_mean <- rowMeans(data_party[, c("sos_ideo_gpt_1", "sos_ideo_gpt_2", "sos_ideo_gpt_3")], na.rm = TRUE)
 
-write.csv(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt_final.csv")
+write.csv(data_party, "data/expert_survey/gps_gpt_final.csv")
 
-saveRDS(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt_final.rds")
+saveRDS(data_party, "data/expert_survey/gps_gpt_final.rds")
 
 

@@ -2,7 +2,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/gps_gpt_final.rds")
+data_party <- readRDS("data/expert_survey/gps_gpt_final.rds")
 
 data_party$econ_distance <- abs(data_party$V4_Scale - data_party$econ_ideo_gpt_mean)
 data_party$sos_distance <- abs(data_party$V6_Scale - data_party$sos_ideo_gpt_mean)
@@ -80,6 +80,6 @@ data_party$sos_ideo_cat_gpt[data_party$sos_ideo_gpt_mean > 5 & data_party$sos_id
 data_party$sos_ideo_cat_gpt[data_party$sos_ideo_gpt_mean > 6 & data_party$sos_ideo_gpt_mean <= 8] <- 6
 data_party$sos_ideo_cat_gpt[data_party$sos_ideo_gpt_mean > 8] <- 7
 
-write.csv(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.csv")
+write.csv(data_party, "data/expert_survey/data_party.csv")
 
-saveRDS(data_party, "_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")
+saveRDS(data_party, "data/expert_survey/data_party.rds")

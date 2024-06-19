@@ -1,7 +1,7 @@
 library(dplyr)
 library(ggplot2)
 
-data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")
+data_party <- readRDS("data/expert_survey/data_party.rds")
 
 # ---------------------- T Test ------------------------------------------------
 
@@ -76,7 +76,7 @@ ggplot(results, aes(x = MeanDifference, y = Category)) +
         axis.text.y = element_text(size = 20),
         plot.caption = element_text(size = 20, hjust = 0))
 
-ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h1_ttest.png",
+ggsave("data/graphs/h1_ttest.png",
        width = 8, height = 6)
 
 h1 <- data_party %>% 
@@ -153,7 +153,7 @@ ggplot(results, aes(x = MeanDifference, y = Category)) +
         axis.text.y = element_text(size = 20),
         plot.caption = element_text(size = 20, hjust = 0))
 
-ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h1_ttest.png",
+ggsave("data/graphs/h1_ttest.png",
        width = 8, height = 6)
 
 h1 <- data_party %>% 

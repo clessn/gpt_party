@@ -2,7 +2,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 
-data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")
+data_party <- readRDS("data/expert_survey/data_party.rds")
 
 data_econ <- data_party %>%
   group_by(group) %>%

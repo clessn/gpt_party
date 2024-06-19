@@ -2,7 +2,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")
+data_party <- readRDS("data/expert_survey/data_party.rds")
 
 
 h3 <- data_party %>% 
@@ -67,7 +67,7 @@ ggplot(h3, aes(x = position, y = type)) +
         strip.text = element_text(size = 20)) # Bold and increased size for facet labels
 
 
-ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h3_distggridges.png",
+ggsave("data/graphs/h3_distggridges.png",
        width = 10, height = 6)
 
 
@@ -129,5 +129,5 @@ ggplot(long_data2, aes(x = alignment, y = mean_distance, fill = alignment_type))
         plot.caption.position = "plot") # Positioning the caption relative to the plot
 
 
-ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h3_barplot.png",
+ggsave("data/graphs/h3_barplot.png",
        width = 10, height = 6)

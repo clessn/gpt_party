@@ -2,7 +2,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 
-data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")
+data_party <- readRDS("data/expert_survey/data_party.rds")
 
 # ------------------ Distance graph ---------------------------- #
 
@@ -72,5 +72,5 @@ ggplot(long_data2, aes(x = reorder(Region_name, -mean_distance),
   _SharedFolder_article_spsa2024_gpt_party/graphs/paper/h3_distggridges.png
 
 
-ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h2_barplot.png",
+ggsave("data/graphs/h2_barplot.png",
        width = 8, height = 6)

@@ -3,7 +3,7 @@ library(tidyr)
 library(ggridges)
 library(ggplot2)
 
-data_party <- readRDS("_SharedFolder_article_spsa2024_gpt_party/data/expert_survey/data_party.rds")
+data_party <- readRDS("data/expert_survey/data_party.rds")
 
 # Graphique nuage de points -------------------------------------- #
 
@@ -210,6 +210,6 @@ ggplot(h1, aes(x = gps, y = gpt)) +
         axis.title.y = element_text(hjust = 0.5),
         axis.text.y = element_text(angle = 90))
 
-ggsave("_SharedFolder_article_spsa2024_gpt_party/graphs/paper/h1_scatterplot.png",
+ggsave("data/graphs/h1_scatterplot.png",
        width = 8, height = 6)
 

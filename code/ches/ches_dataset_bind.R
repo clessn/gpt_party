@@ -35,4 +35,7 @@ df_la_modified <- df_la %>%
 
 df_combined <- bind_rows(df_eu_modified, df_la_modified, df_isr_modified)
 
-saveRDS(df_combined, "data/ches/tmp/ches_data.rds")
+df_combined_reordered <- df_combined %>%
+  select(country, country_id, party, galtan, lrecon, lrgen)
+
+saveRDS(df_combined_reordered, "data/ches/tmp/ches_data.rds")

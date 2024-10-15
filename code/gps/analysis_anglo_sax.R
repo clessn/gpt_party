@@ -2,7 +2,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 
-data_party <- readRDS("data/expert_survey/data_party.rds")
+data_party <- readRDS("data/gps/data_party.rds")
 
 data_econ <- data_party %>%
   group_by(group) %>%
@@ -37,10 +37,13 @@ long_data <- long_data %>%
 # Plot with error bars
 ggplot(long_data, aes(x = reorder(group, -mean_distance), y = mean_distance, fill = distance_type)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
-  geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), 
-                position = position_dodge(width = 0.8), width = 0.25) +
-  labs(x = "Group", 
-       y = "Mean Distance", 
-       title = "Mean Distance in Group Alignments (Econ and Sos) - Sorted with Error Margins") +
+  geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci),
+    position = position_dodge(width = 0.8), width = 0.25
+  ) +
+  labs(
+    x = "Group",
+    y = "Mean Distance",
+    title = "Mean Distance in Group Alignments (Econ and Sos) - Sorted with Error Margins"
+  ) +
   theme_classic() +
   scale_fill_brewer(palette = "Dark2")

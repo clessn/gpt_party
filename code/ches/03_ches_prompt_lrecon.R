@@ -164,7 +164,7 @@ if (nrow(run_errors) > 1) {
 }
 
 # Save the results
-saveRDS(df, "data/ches/tmp/ches_data_id_with_scores.rds")
+saveRDS(df, "data/ches/tmp/03_ches_data_id_with_scores.rds")
 saveRDS(run_errors, "data/ches/tmp/scoring_errors.rds")
 
 # Print summary of errors if any occurred

@@ -1,6 +1,6 @@
 library(dplyr)
 
-source("code/ches/ches_naming.R")
+source("code/ches/00_ches_naming.R")
 
 df_eu <- haven::read_dta("https://www.chesdata.eu/s/CHES2019V3.dta")
 df_la <- haven::read_dta("https://www.chesdata.eu/s/ches_la_2020_aggregate_level_v01.dta")

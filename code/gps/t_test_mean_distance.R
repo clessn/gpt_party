@@ -1,7 +1,8 @@
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 
-data_party <- readRDS("data/expert_survey/data_party.rds")
+data_party <- readRDS("data/gps/data_party.rds")
 
 # ---------------------- T Test ------------------------------------------------
 
@@ -58,7 +59,7 @@ ggplot(results, aes(x = MeanDifference, y = Category)) +
   geom_point(size = 3) +
   geom_linerange(aes(xmin = LowerCI99, xmax = UpperCI99), linewidth = 0.7) +
   geom_linerange(aes(xmin = LowerCI95, xmax = UpperCI95), linewidth = 2) +
-  clessnverse::theme_clean_light() +
+  clessnize::theme_clean_light() +
   labs(x = "\nMean Difference\n",
        y = "\nIdeological Scale\n",
        caption = "Thicker lines denote a 95% confidence interval.\nThinner lines indicate a 99% confidence interval.") +
@@ -103,7 +104,7 @@ g2 <- ggplot(h1, aes(x = gps, y = gpt)) +
   geom_smooth(method = "lm",
               color = "black",
               alpha = 0.2) +
-  clessnverse::theme_clean_light() +
+  clessnize::theme_clean_light() +
   scale_x_continuous(breaks = c(1, 9), labels = c("Left", "Right")) +
   scale_y_continuous(breaks = c(1, 9), labels = c("Left", "Right")) +
   labs(x = "\nParty Alignment (GPS)\n",
@@ -135,7 +136,7 @@ ggplot(results, aes(x = MeanDifference, y = Category)) +
   geom_point(size = 3) +
   geom_linerange(aes(xmin = LowerCI99, xmax = UpperCI99), linewidth = 0.7) +
   geom_linerange(aes(xmin = LowerCI95, xmax = UpperCI95), linewidth = 2) +
-  clessnverse::theme_clean_light() +
+  clessnize::theme_clean_light() +
   labs(x = "\nMean Difference\n",
        y = "\nIdeological Scale\n",
        caption = "Thicker lines denote a 95% confidence interval.\nThinner lines indicate a 99% confidence interval.") +
@@ -180,7 +181,7 @@ g2 <- ggplot(h1, aes(x = gps, y = gpt)) +
   geom_smooth(method = "lm",
               color = "black",
               alpha = 0.2) +
-  clessnverse::theme_clean_light() +
+  clessnize::theme_clean_light() +
   scale_x_continuous(breaks = c(1, 9), labels = c("Left", "Right")) +
   scale_y_continuous(breaks = c(1, 9), labels = c("Left", "Right")) +
   labs(x = "\nParty Alignment (GPS)\n",

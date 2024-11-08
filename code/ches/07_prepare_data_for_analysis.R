@@ -21,21 +21,21 @@ df$galtan_alignment <- factor(df$galtan_alignment, levels = c("left", "center", 
 table(df$galtan_alignment)
 
 df$lrecon_category <- NA
-df$lrecon_category[df$lrecon < 2] <- 1
-df$lrecon_category[df$lrecon >= 2 & df$lrecon < 4] <- 2
-df$lrecon_category[df$lrecon >= 4 & df$lrecon < 5] <- 3
-df$lrecon_category[df$lrecon == 5] <- 4
-df$lrecon_category[df$lrecon > 5 & df$lrecon <= 6] <- 5
-df$lrecon_category[df$lrecon > 6 & df$lrecon <= 8] <- 6
-df$lrecon_category[df$lrecon > 8] <- 7
+df$lrecon_category[df$lrecon < 2] <- "extreme_left"
+df$lrecon_category[df$lrecon >= 2 & df$lrecon < 4] <- "left"
+df$lrecon_category[df$lrecon >= 4 & df$lrecon < 5] <- "center"
+df$lrecon_category[df$lrecon == 5] <- "center"
+df$lrecon_category[df$lrecon > 5 & df$lrecon <= 6] <- "center"
+df$lrecon_category[df$lrecon > 6 & df$lrecon <= 8] <- "right"
+df$lrecon_category[df$lrecon > 8] <- "extreme_right"
 
 df$galtan_category <- NA
-df$galtan_category[df$galtan < 2] <- 1
-df$galtan_category[df$galtan >= 2 & df$galtan < 4] <- 2
-df$galtan_category[df$galtan >= 4 & df$galtan < 5] <- 3
-df$galtan_category[df$galtan == 5] <- 4
-df$galtan_category[df$galtan > 5 & df$galtan <= 6] <- 5
-df$galtan_category[df$galtan > 6 & df$galtan <= 8] <- 6
-df$galtan_category[df$galtan > 8] <- 7
+df$galtan_category[df$galtan < 2] <- "extreme_left"
+df$galtan_category[df$galtan >= 2 & df$galtan < 4] <- "left"
+df$galtan_category[df$galtan >= 4 & df$galtan < 5] <- "center"
+df$galtan_category[df$galtan == 5] <- "center"
+df$galtan_category[df$galtan > 5 & df$galtan <= 6] <- "center"
+df$galtan_category[df$galtan > 6 & df$galtan <= 8] <- "right"
+df$galtan_category[df$galtan > 8] <- "extreme_right"
 
 saveRDS(df, "data/ches/tmp/07_ches_data.rds")

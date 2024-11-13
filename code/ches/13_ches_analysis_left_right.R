@@ -37,7 +37,7 @@ ggplot(h3, aes(x = position, y = type)) +
   facet_wrap(~scale) +
   xlab("Party Alignment") + ylab("") +
   scale_y_discrete(labels = c("ches" = "CHES",
-                              "gpt" = "GPT-4")) +
+                              "gpt" = "GPT-4o")) +
   scale_x_continuous(breaks = c(1, 9),
                      labels = c("Left", "Right")) +
   scale_fill_brewer(palette = "Set2") +
@@ -53,66 +53,6 @@ ggsave("data/graphs/h3_distggridges.png",
 
 # Reshape and filter data as before
 long_data <- df %>%
-  select(lrecon_alignment, lrecon_distance, galtan_alignment, galtan_distance) %>%
-  pivot_longer(
-    cols = c(lrecon_alignment, galtan_alignment),
-    names_to = "alignment_type",
-    values_to = "alignment"
-  ) %>%
-  pivot_longer(
-    cols = c(lrecon_distance, galtan_distance),
-    names_to = "distance_type",
-    values_to = "distance"
-  ) %>%
-  filter(if_else(alignment_type == "lrecon_alignment", distance_type == "lrecon_distance", distance_type == "galtan_distance")) %>%
-  mutate(alignment_type = if_else(alignment_type == "lrecon_alignment", "Econ", "Social")) %>% 
-  filter(!is.na(alignment))
-
-# Calculate mean, standard error, and confidence intervals
-long_data2 <- long_data %>%
-  group_by(alignment_type, alignment) %>%
-  summarise(
-    mean_distance = mean(distance, na.rm = TRUE),
-    se = sd(distance, na.rm = TRUE) / sqrt(n()),
-    lower_ci = mean_distance - 1.96 * se,
-      upper_ci = mean_distance + 1.96 * se,
-    .groups = "drop"
-  ) %>% 
-  mutate(alignment = case_when(
-    alignment == "left" ~ "Left",
-    alignment == "center" ~ "Center",
-    alignment == "right" ~ "Right"
-  ),
-  alignment = factor(alignment, levels = c("Left", "Center", "Right")),
-  alignment_type = ifelse(alignment_type == "Econ", "Economic", "Social"))
-
-ggplot(long_data2, aes(x = alignment, y = mean_distance, fill = alignment_type)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9),
-           alpha = 0.7) +
-  geom_linerange(aes(ymin = lower_ci,
-                     ymax = upper_ci,
-                     color = alignment_type), linewidth = 1,
-                position = position_dodge(width = 0.9)) +
-  labs(x = "\nParty Alignment (GPS)\n", 
-       y = "\nMean Absolute Distance\n", 
-       caption = "Parties labeled as 'Left' have a GPS party alignment of less than 5.\nParties labeled as 'Right' have a party alignment greater than 5.\n'Center' parties are assigned the value of 5.") +
-  scale_fill_brewer(palette = "Set1") +
-  scale_color_brewer(palette = "Set1") +
-  clessnize::theme_clean_light() +
-  theme(axis.title.x = element_text(hjust = 0.5, size = 20), # Bolder and larger axis title X
-        axis.title.y = element_text(hjust = 0.5, size = 20), # Bolder and larger axis title Y
-        axis.text.x = element_text(size = 15), # Bolder and larger axis text X
-        axis.text.y = element_text(size = 15),
-        plot.caption = element_text(size = 20, hjust = 0), # Increased size
-        legend.text = element_text(size = 20), # Increase legend text size
-        legend.key.size = unit(1.5, "lines"),  # Bolder and larger plot caption
-        plot.caption.position = "plot") # Positioning the caption relative to the plot
-
-ggsave("data/graphs/h3_distridges.png",
-       width = 10, height = 6)
-
-# Reshape and filter data as before
-long_data <- df %>%
   select(lrecon_category, lrecon_distance, galtan_category, galtan_distance) %>%
   pivot_longer(
     cols = c(lrecon_category, galtan_category),
@@ -121,7 +61,7 @@ long_data <- df %>%
   ) %>%
   pivot_longer(
     cols = c(lrecon_distance, galtan_distance),
-    names_to = "distance_type",
+    names_to = "distance_type", 
     values_to = "distance"
   ) %>%
   filter(if_else(category_type == "lrecon_category", distance_type == "lrecon_distance", distance_type == "galtan_distance")) %>%
@@ -134,8 +74,9 @@ long_data2 <- long_data %>%
   summarise(
     mean_distance = mean(distance, na.rm = TRUE),
     se = sd(distance, na.rm = TRUE) / sqrt(n()),
+    n = n(),
     lower_ci = mean_distance - 1.96 * se,
-      upper_ci = mean_distance + 1.96 * se,
+    upper_ci = mean_distance + 1.96 * se,
     .groups = "drop"
   ) %>% 
   mutate(category = case_when(
@@ -148,6 +89,7 @@ long_data2 <- long_data %>%
   alignment = factor(category, levels = c("Extreme Left", "Left", "Center", "Right", "Extreme Right")),
   alignment_type = ifelse(category_type == "Econ", "Economic", "Social"))
 
+# Create the plot with sample size annotations
 ggplot(long_data2, aes(x = alignment, y = mean_distance, fill = alignment_type)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9),
            alpha = 0.7) +
@@ -155,20 +97,27 @@ ggplot(long_data2, aes(x = alignment, y = mean_distance, fill = alignment_type))
                      ymax = upper_ci,
                      color = alignment_type), linewidth = 1,
                 position = position_dodge(width = 0.9)) +
+  # Add text annotations for sample sizes
+  geom_text(aes(y = -0.1, # Adjust this value to position the text
+                label = paste0("n=", n)),
+            position = position_dodge(width = 0.9),
+            vjust = 1, size = 5) +
+  # Expand the y-axis limits to make room for the annotations
+  scale_y_continuous(expand = expansion(mult = c(0.1, 0.05))) +
   labs(x = "\nParty Alignment (CHES)\n", 
        y = "\nMean Absolute Distance\n", 
-       caption = "Parties labeled as 'Left' have a GPS party alignment of less than 5.\nParties labeled as 'Right' have a party alignment greater than 5.\n'Center' parties are assigned the value of 5.") +
+       caption = "Parties labeled as 'Extreme left' have a CHES party alignment of less than 2.\nParties labeled as 'Left' have a party alignment between 2 inclusively and 4.\nParties labeled as 'Center' have a party alignment between 4 inclusively and 6 inclusively.\nParties labeled as 'Right' have a party alignment between 6 and 8 inclusively.\nParties labeled as 'Extreme right' have a CHES party alignment of more than 8.") +
   scale_fill_brewer(palette = "Set1") +
   scale_color_brewer(palette = "Set1") +
   clessnize::theme_clean_light() +
-  theme(axis.title.x = element_text(hjust = 0.5, size = 20), # Bolder and larger axis title X
-        axis.title.y = element_text(hjust = 0.5, size = 20), # Bolder and larger axis title Y
-        axis.text.x = element_text(size = 15), # Bolder and larger axis text X
+  theme(axis.title.x = element_text(hjust = 0.5, size = 16),
+        axis.title.y = element_text(hjust = 0.5, size = 16),
+        axis.text.x = element_text(size = 15),
         axis.text.y = element_text(size = 15),
-        plot.caption = element_text(size = 20, hjust = 0), # Increased size
-        legend.text = element_text(size = 20), # Increase legend text size
-        legend.key.size = unit(1.5, "lines"),  # Bolder and larger plot caption
-        plot.caption.position = "plot") # Positioning the caption relative to the plot
+        plot.caption = element_text(size = 12, hjust = 0),
+        legend.text = element_text(size = 14),
+        legend.key.size = unit(1, "lines"),
+        plot.caption.position = "plot")
 
 ggsave("data/graphs/h3_barplot.png",
        width = 10, height = 6)

@@ -1,21 +1,9 @@
 library(tidyr)
 library(dplyr)
 library(ggplot2)
-
 df <- readRDS("data/ches/tmp/07_ches_data.rds")
 
 # ------------------ Distance graph ---------------------------- #
-
-long_data <- df %>%
-  filter(Region_name != "NA") %>%
-  select(Region_name, econ_distance, sos_distance) %>%
-  pivot_longer(
-    cols = c(econ_distance, sos_distance),
-    names_to = "distance_type",
-    values_to = "distance"
-  ) %>%
-  mutate(distance_type = if_else(distance_type == "econ_distance", "Econ", "Sos"))
-
 df_long <- df %>%
   select(region, lrecon_distance, galtan_distance) %>%
   pivot_longer(
@@ -34,15 +22,25 @@ df_long_2 <- df_long %>%
   mutate(l_ci = mean_distance - (1.96 * sd / sqrt(n)),
          u_ci = mean_distance + (1.96 * sd / sqrt(n)),
          region = case_when(
-    region == "middle_east" ~ "Middle East",
-    region == "latin_america" ~ "Latin America",
-    region == "western_europe" ~ "Western Europe",
-    region == "eastern_europe" ~ "Eastern Europe"
+    region == "middle_east" ~ "Israel &\nTurkey",
+    region == "latin_america" ~ "Latin\nAmerica",
+    region == "western_europe" ~ "Western\nEurope",
+    region == "eastern_europe" ~ "Eastern\nEurope"
   ),
   distance_type = ifelse(distance_type == "Economic", "Economic", "Social"))
 
+# Create labels with sample sizes
+region_labels <- df_long_2 %>%
+  group_by(region) %>%
+  slice(1) %>%  # Take first observation per region since n should be same
+  mutate(label = paste0(region, "\n(n=", n, ")")) %>%
+  select(region, label)
 
-ggplot(df_long_2, aes(x = reorder(region, -mean_distance),
+# Join labels back to main dataset
+df_long_2 <- df_long_2 %>%
+  left_join(region_labels, by = "region")
+
+ggplot(df_long_2, aes(x = reorder(label, -mean_distance),  # Changed from region to label
                       y = mean_distance, fill = distance_type,
                       color = distance_type)) +
   geom_bar(stat = "identity",
@@ -56,10 +54,10 @@ ggplot(df_long_2, aes(x = reorder(region, -mean_distance),
   scale_fill_brewer(palette = "Set1") +
   scale_color_brewer(palette = "Set1") +
   clessnize::theme_clean_light() +
-  theme(axis.title.x = element_text(hjust = 0.5, size = 20), # Increased size
-        axis.title.y = element_text(hjust = 0.5, size = 20), # Increased size
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 20), # Increased size
-        axis.text.y = element_text(size = 20)) # Increased size
+  theme(axis.title.x = element_text(hjust = 0.5, size = 20),
+        axis.title.y = element_text(hjust = 0.5, size = 20),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 20),
+        axis.text.y = element_text(size = 20))
 
 ggsave("data/graphs/h2_barplot.png",
-       width = 8, height = 6)
+       width = 8, height = 6

@@ -27,6 +27,7 @@ long_data <- df_size %>%
 long_data2 <- long_data %>%
   group_by(size, distance_type) %>%
   summarise(
+    n = n(),
     mean_distance = mean(distance, na.rm = TRUE),
     se = sd(distance, na.rm = TRUE) / sqrt(n()),
     lower_ci = mean_distance - qt(0.975, df = n() - 1) * se,
@@ -35,8 +36,15 @@ long_data2 <- long_data %>%
   ) %>%
   mutate(
     partysize = factor(size, levels = c("Small", "Medium", "Large")),
-    distance_type = ifelse(distance_type == "econ", "Economic", "Social")
+    distance_type = ifelse(distance_type == "econ", "Economic", "Social"),
+    label = paste0("n = ", n)
   )
+
+
+n_counts <- long_data2 %>%
+ distinct(size, n) %>%
+ arrange(factor(size, levels = c("Small", "Medium", "Large"))) %>%
+ pull(n)
 
 # Plot with error bars
 ggplot(long_data2, aes(x = partysize, y = mean_distance, fill = distance_type)) +
@@ -53,6 +61,7 @@ ggplot(long_data2, aes(x = partysize, y = mean_distance, fill = distance_type)) 
     linewidth = 1,
     position = position_dodge(width = 0.9)
   ) +
+  scale_x_discrete(labels = paste0(c("Small\nn=", "Medium\nn=", "Large\nn="), n_counts)) + 
   labs(
     x = "\nParty Size\n",
     y = "\nMean Distance\n"

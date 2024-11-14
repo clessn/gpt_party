@@ -10,14 +10,16 @@ df_isr_modified <- df_isr %>%
   filter(year == 2021) %>%
   select(party_name, galtan, lrecon, lrgen) %>%
   mutate(
+    party_abb = party_name,
     country = "israel", country_id = "IL",
     party = party_name
   ) %>%
   select(-party_name)
 
 df_eu_modified <- df_eu %>%
-  select(country, party_id, galtan, lrecon, lrgen) %>%
+  select(country, party_id, galtan, lrecon, lrgen, party) %>%
   mutate(
+    party_abb = party,
     country = country_map[as.character(country)],
     country_id = countrycode::countrycode(country, origin = "country.name", destination = "iso2c"),
     party = party_map[as.character(party_id)]
@@ -25,8 +27,9 @@ df_eu_modified <- df_eu %>%
   select(-party_id)
 
 df_la_modified <- df_la %>%
-  select(country_en, country_abb, party_en, galtan, lrecon, lrgen) %>%
+  select(country_en, country_abb, party_en, galtan, lrecon, lrgen, party_abb) %>%
   mutate(
+    party_abb = party_abb,
     country = country_en,
     country_id = country_abb,
     party = party_en
@@ -36,6 +39,6 @@ df_la_modified <- df_la %>%
 df_combined <- bind_rows(df_eu_modified, df_la_modified, df_isr_modified)
 
 df_combined_reordered <- df_combined %>%
-  select(country, country_id, party, galtan, lrecon, lrgen)
+  select(country, country_id, party, party_abb, galtan, lrecon, lrgen)
 
-saveRDS(df_combined_reordered, "data/ches/tmp/ches_data.rds")
+saveRDS(df_combined_reordered, "data/ches/tmp/01_ches_data.rds")
